@@ -1,0 +1,48 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type StatisticsType {
+  id: String!
+  score: Float!
+  totalGames: Float!
+  wins: Float!
+  confirms: Float!
+  updateAt: Float!
+  serverPublic: Float!
+  serverSign: Float!
+}
+
+type User {
+  id: String!
+  name: String!
+  createdAt: Float!
+  statistics: StatisticsType!
+}
+
+type AuthType {
+  token: String!
+  expiresAt: Float!
+  refreshToken: String!
+}
+
+type Query {
+  user: User!
+}
+
+type Mutation {
+  signUp(input: CreateUserInput!): User!
+  signIn(input: LoginInput!): AuthType!
+  updateRefreshToken: AuthType!
+}
+
+input CreateUserInput {
+  name: String!
+  login: String!
+  password: String!
+}
+
+input LoginInput {
+  login: String!
+  password: String!
+}
