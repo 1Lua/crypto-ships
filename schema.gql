@@ -3,14 +3,14 @@
 # ------------------------------------------------------
 
 type StatisticsType {
-  id: String!
-  score: Float!
-  totalGames: Float!
-  wins: Float!
-  confirms: Float!
-  updateAt: Float!
-  serverPublic: Float!
-  serverSign: Float!
+  id: String
+  score: Float
+  totalGames: Float
+  wins: Float
+  confirms: Float
+  updateAt: Float
+  serverPublic: Float
+  serverSign: Float
 }
 
 type User {
@@ -26,8 +26,36 @@ type AuthType {
   refreshToken: String!
 }
 
+type GameType {
+  id: String!
+  user1: String
+  user2: String
+  status: String
+  hash1: String
+  hash2: String
+  placement1: String
+  placement2: String
+  salt1: String
+  salt2: String
+  history: String
+  winner: String
+  startedAt: Float
+  finishedAt: Float
+  serverPublic: String
+  serverSign: Float
+}
+
 type Query {
-  user: User!
+  user(input: UserInput!): User!
+  game(input: GameInput!): GameType!
+}
+
+input UserInput {
+  name: String!
+}
+
+input GameInput {
+  id: String!
 }
 
 type Mutation {

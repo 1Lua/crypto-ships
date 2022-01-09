@@ -2,27 +2,27 @@ import { Field, ObjectType } from '@nestjs/graphql'
 
 @ObjectType()
 export class StatisticsType {
-    @Field(() => String)
+    @Field(() => String, { nullable: true })
     id: string
 
-    @Field(() => Number)
+    @Field(() => Number, { nullable: true })
     score: number
 
-    @Field(() => Number)
+    @Field(() => Number, { nullable: true })
     totalGames: number
 
-    @Field(() => Number)
+    @Field(() => Number, { nullable: true })
     wins: number
 
-    @Field(() => Number)
+    @Field(() => Number, { nullable: true })
     confirms: number
 
-    @Field(() => Number)
+    @Field(() => Number, { nullable: true })
     updateAt: number
 
-    @Field(() => Number)
+    @Field(() => Number, { nullable: true })
     serverPublic: string | undefined
 
-    @Field(() => Number)
+    @Field(() => Number, { nullable: true })
     serverSign: string | undefined
 }

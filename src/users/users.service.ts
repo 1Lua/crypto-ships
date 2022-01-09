@@ -85,9 +85,9 @@ export class UsersService {
         return user
     }
 
-    async getUser(): Promise<UserEntity> {
+    async getUserByNameWithStatistics(name: string): Promise<UserEntity> {
         const user = await this._userRepository.findOne(
-            {},
+            { name },
             { relations: ['statistics'] },
         )
         if (!user) {
