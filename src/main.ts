@@ -17,7 +17,7 @@ async function bootstrap(): Promise<void> {
     const port = configService.get('PORT') || DEFAULT_APP_PORT
     const hostname = configService.get('HOST') || DEFAULT_APP_HORT
 
-    await app.listen(port, hostname, () =>
+    await app.listen(port, () =>
         logger.log(`Server running at ${hostname}:${port}`),
     )
 }

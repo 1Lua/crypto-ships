@@ -3,8 +3,8 @@ import { Response } from 'express'
 
 import { UserDto } from 'src/users/dto/user.dto'
 
-import { GameDto } from './dtos/game.dto'
-import { GameEntity } from './entities/game.entity'
+import { GameDto } from '../dtos/game.dto'
+
 import { GameService } from './games.service'
 
 const USERS_QUERY_INTERVAL = 5000
@@ -32,13 +32,13 @@ export class GameSelectionService {
     }
 
     async matchingPlayers(): Promise<void> {
-        this._logger.log(this._usersQuery)
+        // this._logger.log(this._usersQuery)
 
         const TWO = 2
         const count = this._usersQuery.length
         const pairs = (count - (count % TWO)) / TWO // Максимальное количество пар
 
-        const proms: Promise<GameEntity>[] = []
+        const proms: Promise<GameDto>[] = []
 
         for (let i = 0; i < pairs * TWO; i += TWO) {
             const user1 = this._usersQuery[i]

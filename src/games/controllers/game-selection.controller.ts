@@ -3,7 +3,7 @@ import { Request, Response } from 'express'
 
 import { JwtAuthService } from 'src/auth/jwt.auth.service'
 
-import { GameSelectionService } from '../game-selection.service'
+import { GameSelectionService } from '../services/game-selection.service'
 
 @Controller('joingame')
 export class GameSelectionController {

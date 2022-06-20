@@ -6,13 +6,21 @@ import { UsersModule } from 'src/users/users.module'
 
 import { GameSelectionController } from './controllers/game-selection.controller'
 import { GameEntity } from './entities/game.entity'
-import { GameSelectionService } from './game-selection.service'
 import { GameResolver } from './game.resolver'
-import { GameService } from './games.service'
+import { GamesGateway } from './gateway/games.gateway'
+import { GameLogicService } from './services/game-logic.service'
+import { GameSelectionService } from './services/game-selection.service'
+import { GameService } from './services/games.service'
 
 @Module({
     imports: [TypeOrmModule.forFeature([GameEntity]), UsersModule, AuthModule],
-    providers: [GameService, GameResolver, GameSelectionService],
+    providers: [
+        GameService,
+        GameResolver,
+        GameSelectionService,
+        GamesGateway,
+        GameLogicService,
+    ],
     controllers: [GameSelectionController],
 })
 export class GameModule {}
