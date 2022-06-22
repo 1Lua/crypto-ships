@@ -57,7 +57,7 @@ export class GameLogicService {
     }
 
     /**
-     * This throws new GamesGatewayError("userAuthError", "User is not authorized", client)
+     * This throws new GamesGatewayError("userAuthError", "User is not authorized")
      * @param client
      */
 
@@ -72,11 +72,7 @@ export class GameLogicService {
             client.data.isAuth = true
             client.emit('successAuth', { message: 'Success Authentication' })
         } catch (err) {
-            throw new GamesGatewayError(
-                'userAuthError',
-                'Token is invalid',
-                client,
-            )
+            throw new GamesGatewayError('userAuthError', 'Token is invalid')
         }
     }
 
@@ -93,7 +89,6 @@ export class GameLogicService {
             throw new GamesGatewayError(
                 'userAuthError',
                 'User is not authorized',
-                client,
             )
         }
 
@@ -101,7 +96,6 @@ export class GameLogicService {
             throw new GamesGatewayError(
                 'userAuthError',
                 'User is not authorized',
-                client,
             )
         }
 
@@ -148,18 +142,13 @@ export class GameLogicService {
             throw new GamesGatewayError(
                 'connectToGameError',
                 'Game id was expected',
-                client,
             )
         }
 
         const { userId } = this.userIsAuth(client)
         const gameProcess = await this.getGameAsGameProcess(gameId)
         if (!gameProcess) {
-            throw new GamesGatewayError(
-                'connectToGameError',
-                'Game not found',
-                client,
-            )
+            throw new GamesGatewayError('connectToGameError', 'Game not found')
         }
         if (
             userId !== gameProcess.users[0].userId &&
@@ -168,7 +157,6 @@ export class GameLogicService {
             throw new GamesGatewayError(
                 'connectToGameError',
                 'User havent access to this game',
-                client,
             )
         }
         this.addGameToActive(gameId, gameProcess)
@@ -197,7 +185,6 @@ export class GameLogicService {
             throw new GamesGatewayError(
                 'connectToGameError',
                 'User dont connected to this game',
-                client,
             )
         }
         return { userId, isAuth, gameProcess }
@@ -209,11 +196,7 @@ export class GameLogicService {
         client: Socket,
     ): Promise<void> {
         if (gameId === undefined) {
-            throw new GamesGatewayError(
-                'userReadyError',
-                'gameId was expected',
-                client,
-            )
+            throw new GamesGatewayError('userReadyError', 'gameId was expected')
         }
 
         const { gameProcess, userId } = this.userIsConnectedToGame(
@@ -224,7 +207,6 @@ export class GameLogicService {
             throw new GamesGatewayError(
                 'userReadyError',
                 'Expected ready equals true',
-                client,
             )
         }
 
@@ -232,7 +214,6 @@ export class GameLogicService {
             throw new GamesGatewayError(
                 'userReadyError',
                 'Game is already running',
-                client,
             )
         }
 
@@ -253,18 +234,10 @@ export class GameLogicService {
         client: Socket,
     ): Promise<void> {
         if (gameId === undefined) {
-            throw new GamesGatewayError(
-                'userHashError',
-                'gameId was expected',
-                client,
-            )
+            throw new GamesGatewayError('userHashError', 'gameId was expected')
         }
         if (hash === undefined) {
-            throw new GamesGatewayError(
-                'userHashError',
-                'Hash was expected',
-                client,
-            )
+            throw new GamesGatewayError('userHashError', 'Hash was expected')
         }
         const { gameProcess, userId } = this.userIsConnectedToGame(
             gameId,
@@ -272,21 +245,13 @@ export class GameLogicService {
         )
 
         if (gameProcess.status !== GameStatuses.waitingForHash) {
-            throw new GamesGatewayError(
-                'userHashError',
-                'Unexpected hash',
-                client,
-            )
+            throw new GamesGatewayError('userHashError', 'Unexpected hash')
         }
 
         try {
             await this._gameService.setGameUserHash(gameId, userId, hash)
         } catch (err) {
-            throw new GamesGatewayError(
-                'userHashError',
-                'Incorrect hash',
-                client,
-            )
+            throw new GamesGatewayError('userHashError', 'Incorrect hash')
         }
 
         gameProcess.setUserHash(userId, hash)
@@ -331,31 +296,21 @@ export class GameLogicService {
             throw new GamesGatewayError(
                 'userMakeMoveError',
                 'gameId was expected',
-                client,
             )
         }
 
         if (x === undefined) {
-            throw new GamesGatewayError(
-                'userMakeMoveError',
-                'x was expected',
-                client,
-            )
+            throw new GamesGatewayError('userMakeMoveError', 'x was expected')
         }
 
         if (y === undefined) {
-            throw new GamesGatewayError(
-                'userMakeMoveError',
-                'y was expected',
-                client,
-            )
+            throw new GamesGatewayError('userMakeMoveError', 'y was expected')
         }
 
         if (x < 0 || x > MaxGameFieldSize - 1) {
             throw new GamesGatewayError(
                 'userMakeMoveError',
                 'x can take a value from 0 to 9',
-                client,
             )
         }
 
@@ -363,7 +318,6 @@ export class GameLogicService {
             throw new GamesGatewayError(
                 'userMakeMoveError',
                 'y can take a value from 0 to 9',
-                client,
             )
         }
 
@@ -376,7 +330,6 @@ export class GameLogicService {
             throw new GamesGatewayError(
                 'userMakeMoveError',
                 'Game is not running',
-                client,
             )
         }
 
@@ -392,7 +345,6 @@ export class GameLogicService {
             throw new GamesGatewayError(
                 'userMakeMoveError',
                 'The enemy move is expected',
-                client,
             )
         }
 
@@ -402,13 +354,11 @@ export class GameLogicService {
                 throw new GamesGatewayError(
                     'userMakeMoveError',
                     'Your move result is waiting from enemy',
-                    client,
                 )
             } else {
                 throw new GamesGatewayError(
                     'userMakeMoveError',
                     'Enemy move result is waiting from your',
-                    client,
                 )
             }
         }
@@ -421,7 +371,6 @@ export class GameLogicService {
                     throw new GamesGatewayError(
                         'userMakeMoveError',
                         'This move already exists',
-                        client,
                     )
                 }
 
@@ -431,7 +380,6 @@ export class GameLogicService {
             throw new GamesGatewayError(
                 'userMakeMoveError',
                 'The enemy move is expected',
-                client,
             )
         }
 
@@ -460,31 +408,21 @@ export class GameLogicService {
             throw new GamesGatewayError(
                 'userMoveResultError',
                 'gameId was expected',
-                client,
             )
         }
 
         if (x === undefined) {
-            throw new GamesGatewayError(
-                'userMoveResultError',
-                'x was expected',
-                client,
-            )
+            throw new GamesGatewayError('userMoveResultError', 'x was expected')
         }
 
         if (y === undefined) {
-            throw new GamesGatewayError(
-                'userMoveResultError',
-                'y was expected',
-                client,
-            )
+            throw new GamesGatewayError('userMoveResultError', 'y was expected')
         }
 
         if (hit === undefined) {
             throw new GamesGatewayError(
                 'userMoveResultError',
                 'hit was expected',
-                client,
             )
         }
 
@@ -492,7 +430,6 @@ export class GameLogicService {
             throw new GamesGatewayError(
                 'userMoveResultError',
                 'x can take a value from 0 to 9',
-                client,
             )
         }
 
@@ -500,7 +437,6 @@ export class GameLogicService {
             throw new GamesGatewayError(
                 'userMoveResultError',
                 'y can take a value from 0 to 9',
-                client,
             )
         }
 
@@ -513,7 +449,6 @@ export class GameLogicService {
             throw new GamesGatewayError(
                 'userMoveResultError',
                 'Game is not running',
-                client,
             )
         }
 
@@ -524,13 +459,11 @@ export class GameLogicService {
                 throw new GamesGatewayError(
                     'userMoveResultError',
                     'Your move is expected',
-                    client,
                 )
             }
             throw new GamesGatewayError(
                 'userMoveResultError',
                 'Enemy move is expected',
-                client,
             )
         }
 
@@ -541,13 +474,11 @@ export class GameLogicService {
                     throw new GamesGatewayError(
                         'userMoveResultError',
                         'Your move is expected',
-                        client,
                     )
                 }
                 throw new GamesGatewayError(
                     'userMoveResultError',
                     'Enemy move is expected',
-                    client,
                 )
             }
         }
@@ -558,14 +489,12 @@ export class GameLogicService {
                 throw new GamesGatewayError(
                     'userMoveResultError',
                     "You can't confirm your own move",
-                    client,
                 )
             }
             if (lastMove.move.x !== x || lastMove.move.y !== y) {
                 throw new GamesGatewayError(
                     'userMoveResultError',
                     'Incorrect last move coordinates',
-                    client,
                 )
             }
         }
@@ -614,14 +543,12 @@ export class GameLogicService {
             throw new GamesGatewayError(
                 'userPlacementError',
                 'gameId was expected',
-                client,
             )
         }
         if (placement === undefined) {
             throw new GamesGatewayError(
                 'userPlacementError',
                 'Placement was expected',
-                client,
             )
         }
 
@@ -634,7 +561,6 @@ export class GameLogicService {
             throw new GamesGatewayError(
                 'userPlacementError',
                 'Unexpected placement',
-                client,
             )
         }
 
@@ -643,7 +569,6 @@ export class GameLogicService {
             throw new GamesGatewayError(
                 'userPlacementError',
                 'Incorrect placement format',
-                client,
             )
         }
 
@@ -658,7 +583,6 @@ export class GameLogicService {
             throw new GamesGatewayError(
                 'userPlacementError',
                 'Incorrect placement',
-                client,
             )
         }
 
@@ -674,7 +598,6 @@ export class GameLogicService {
             throw new GamesGatewayError(
                 'userPlacementError',
                 'Incorrect placement',
-                client,
             )
         }
 
@@ -761,18 +684,10 @@ export class GameLogicService {
         client: Socket,
     ): Promise<void> {
         if (gameId === undefined) {
-            throw new GamesGatewayError(
-                'userSaltError',
-                'gameId was expected',
-                client,
-            )
+            throw new GamesGatewayError('userSaltError', 'gameId was expected')
         }
         if (salt === undefined) {
-            throw new GamesGatewayError(
-                'userSaltError',
-                'salt was expected',
-                client,
-            )
+            throw new GamesGatewayError('userSaltError', 'salt was expected')
         }
         const { gameProcess, userId } = this.userIsConnectedToGame(
             gameId,
@@ -780,11 +695,7 @@ export class GameLogicService {
         )
 
         if (gameProcess.status !== GameStatuses.waitingForHash) {
-            throw new GamesGatewayError(
-                'userSaltError',
-                'Unexpected salt',
-                client,
-            )
+            throw new GamesGatewayError('userSaltError', 'Unexpected salt')
         }
 
         if (!GameVerify.verifySalt(salt)) {
@@ -794,11 +705,7 @@ export class GameLogicService {
                 userId,
                 'Incorrect salt',
             )
-            throw new GamesGatewayError(
-                'userSaltError',
-                'Incorrect salt',
-                client,
-            )
+            throw new GamesGatewayError('userSaltError', 'Incorrect salt')
         }
 
         const localId = gameProcess.getLocalUserId(userId)
@@ -806,7 +713,6 @@ export class GameLogicService {
             throw new GamesGatewayError(
                 'connectToGameError',
                 'User dont connected to this game',
-                client,
             )
         }
 
@@ -827,7 +733,6 @@ export class GameLogicService {
             throw new GamesGatewayError(
                 'userHashError',
                 'Hashes are not equals',
-                client,
             )
         }
 

@@ -46,19 +46,14 @@ export class GamesGatewayError<
     T extends ServerToClientErrorsNames,
 > extends WsException {
     name: T
-    constructor(
-        name: T,
-        message: GamesGatewayErrors<T>,
-        client: SocketIO.Socket,
-    ) {
+    constructor(name: T, message: GamesGatewayErrors<T>) {
         super(message)
         this.name = name
-        console.log(client.id)
     }
 }
 
 @Catch(GamesGatewayError)
-export class GatewayFilter extends BaseWsExceptionFilter {
+export class GamesGatewayFilter extends BaseWsExceptionFilter {
     private _logger: Logger = new Logger('AppGatewayFilter')
 
     catch<T extends ServerToClientErrorsNames>(
