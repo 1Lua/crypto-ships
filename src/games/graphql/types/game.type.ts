@@ -12,41 +12,41 @@ export class GameType {
     user2: string
 
     @Field(() => String, { nullable: true })
-    status: string
+    status: number
 
     @Field(() => String, { nullable: true })
-    hash1: string
+    hash1?: string
 
     @Field(() => String, { nullable: true })
-    hash2: string
+    hash2?: string
 
     @Field(() => String, { nullable: true })
-    placement1: string
+    placement1?: string
 
     @Field(() => String, { nullable: true })
-    placement2: string
+    placement2?: string
 
     @Field(() => String, { nullable: true })
-    salt1: string
+    salt1?: string
 
     @Field(() => String, { nullable: true })
-    salt2: string
+    salt2?: string
 
     @Field(() => String, { nullable: true })
-    history: string
+    history?: string
 
     @Field(() => String, { nullable: true })
-    winner: string
+    winner?: string
 
     @Field(() => Number, { nullable: true })
-    startedAt: number
+    createdAt?: number
 
     @Field(() => Number, { nullable: true })
-    finishedAt: number
+    finishedAt?: number
 
     @Field(() => String, { nullable: true })
-    serverPublic: string
+    serverPublic?: string
 
     @Field(() => Number, { nullable: true })
-    serverSign: string
+    serverSign?: string
 }

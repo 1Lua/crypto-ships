@@ -50,9 +50,6 @@ export class GameEntity {
     createdAt: number
 
     @Column({ type: 'bigint', nullable: true })
-    startedAt: number
-
-    @Column({ type: 'bigint', nullable: true })
     finishedAt: number
 
     @Column({ type: String, nullable: true })

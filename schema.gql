@@ -39,7 +39,7 @@ type GameType {
   salt2: String
   history: String
   winner: String
-  startedAt: Float
+  createdAt: Float
   finishedAt: Float
   serverPublic: String
   serverSign: Float
@@ -48,6 +48,8 @@ type GameType {
 type Query {
   user(input: UserInput!): User!
   game(input: GameInput!): GameType!
+  getLastGames(input: LastGamesInput!): [GameType!]!
+  getUserGames(input: UserGamesInput!): [GameType!]!
 }
 
 input UserInput {
@@ -56,6 +58,19 @@ input UserInput {
 
 input GameInput {
   id: String!
+}
+
+input LastGamesInput {
+  count: Float = 40
+  from: Float = 0
+  time: Float
+}
+
+input UserGamesInput {
+  userId: String!
+  count: Float = 40
+  from: Float = 0
+  time: Float
 }
 
 type Mutation {

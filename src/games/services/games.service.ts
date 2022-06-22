@@ -27,7 +27,7 @@ export class GameService {
         return game
     }
 
-    async getGame(id: string): Promise<GameDto | void> {
+    async getGame(id: string): Promise<GameDto | undefined> {
         return await this._gameRepository.findOne(id)
     }
 
@@ -38,31 +38,52 @@ export class GameService {
         await this._gameRepository.update(id, params)
         return await this._gameRepository.findOne(id)
     }
-    /*
+
+    /**
      * Метод позволяет получить список последних игр
-     * 
+     *
      * @param count Количество игр
-     * @param from 
+     * @param from
      * @param time Указывает с какого момента времени  (game.createdAt < time)
-    *
+     */
 
-    async getLastGames(count: number, from?: number, time?: number): Promise <GameDto[]> {
-        
-        this._gameRepository.createQueryBuilder()
+    async getLastGames(
+        count: number,
+        from?: number,
+        time?: number,
+    ): Promise<GameDto[]> {
+        const takeFrom = from !== undefined ? from : 0
+        const fromTime = time !== undefined ? time : Date.now()
 
-    } */
+        const games = await this._gameRepository
+            .createQueryBuilder('game')
+            .where('game.status = :status', { status: GameStatuses.finished })
+            .andWhere('game.createdAt < :fromTime', { fromTime })
+            .orderBy('game.createdAt', 'DESC')
+            .skip(takeFrom)
+            .take(count)
+            .getMany()
+        return games
+    }
 
-    /*
-        getUsersGames
+    async getUserGames(
+        userId: string,
+        count: number,
+        from?: number,
+        time?: number,
+    ): Promise<GameDto[]> {
+        const takeFrom = from !== undefined ? from : 0
+        const fromTime = time !== undefined ? time : Date.now()
 
-    */
-
-    async verifyHash(hash: string): Promise<boolean> {
-        // need to add checkeing
-        if (hash) {
-            return true
-        }
-        return false
+        const games = await this._gameRepository
+            .createQueryBuilder('game')
+            .where('game.user1 = :userId', { userId })
+            .orWhere('game.user2 = :userId', { userId })
+            .andWhere('game.createdAt < :fromTime', { fromTime })
+            .skip(takeFrom)
+            .take(count)
+            .getMany()
+        return games
     }
 
     async setGameUserHash(
@@ -75,9 +96,6 @@ export class GameService {
         }
         if (!hash) {
             throw new Error('hash is undefined')
-        }
-        if (!(await this.verifyHash(hash))) {
-            throw new Error('hash is incorrect')
         }
 
         const game = await this._gameRepository.findOne(gameId)
