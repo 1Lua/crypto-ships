@@ -74,6 +74,7 @@ export interface ServerToClientErrors {
             | 'Unexpected placement'
             | 'gameId was expected'
             | 'Incorrect placement'
+            | 'Fake placement'
     }) => void
 
     userSaltError: (args: {

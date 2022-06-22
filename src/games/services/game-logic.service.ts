@@ -601,6 +601,21 @@ export class GameLogicService {
             )
         }
 
+        const gameHistoryVerify = GameVerify.verifyHistory(
+            gameProcess.history,
+            gameField,
+            userId,
+        )
+        if (!gameHistoryVerify) {
+            gameProcess.setUserResult(userId, 'Fake placement')
+            await this._gameService.setGameUserResult(
+                gameId,
+                userId,
+                'Fake placement',
+            )
+            throw new GamesGatewayError('userPlacementError', 'Fake placement')
+        }
+
         await this._gameService.setGameUserPlacement(gameId, userId, placement)
         gameProcess.setUserPlacement(userId, placement)
 

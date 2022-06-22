@@ -22,6 +22,7 @@ export const ShipsSum = [0, Ship1Sum, Ship2Sum, Ship3Sum, Ship4Sum]
 export type UserResult =
     | 'Ok'
     | 'Incorrect placement'
+    | 'Fake placement'
     | 'Incorrect salt'
     | 'Hashes are not equals'
 
@@ -448,6 +449,26 @@ export class GameVerify {
         }
 
         return result
+    }
+
+    static verifyHistory(
+        gameHistory: GameHistory,
+        userField: GameField,
+        userId: string,
+    ): boolean {
+        const history = gameHistory.get()
+        for (const record of history) {
+            if (record.userId !== userId && record.hit === true) {
+                const line = userField[record.move.y]
+                if (line) {
+                    const cell = line[record.move.x]
+                    if (cell !== 1) {
+                        return false
+                    }
+                }
+            }
+        }
+        return true
     }
 
     static verifySalt(salt: string): boolean {
