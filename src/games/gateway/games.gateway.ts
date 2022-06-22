@@ -37,7 +37,7 @@ export class GamesGateway
 
     @UseFilters(GamesGatewayFilter)
     @SubscribeMessage('userAuth')
-    async handleMessage(
+    async userAuth(
         @ConnectedSocket() client: Socket,
         @MessageBody() args: ClientToServerEventsParameters<'userAuth'>[0],
     ): Promise<void> {
@@ -115,6 +115,17 @@ export class GamesGateway
             hit,
             client,
         )
+    }
+
+    @UseFilters(GamesGatewayFilter)
+    @SubscribeMessage('setUserSalt')
+    async setUserSalt(
+        @ConnectedSocket() client: Socket,
+        @MessageBody()
+        args: ClientToServerEventsParameters<'setUserSalt'>[0],
+    ): Promise<void> {
+        const { salt, gameId } = args
+        await this._gameClientService.onSetUserSalt(gameId, salt, client)
     }
 
     afterInit(server: Server): void {
