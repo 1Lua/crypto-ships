@@ -122,6 +122,7 @@ export enum GameStatuses {
 }
 
 export class GameProcess {
+    lastAction: number
     gameId: string
     status: number
     createdAt: number
@@ -156,6 +157,7 @@ export class GameProcess {
             result: game.result2,
         }
         this.users = [user1, user2]
+        this.lastAction = Date.now()
     }
 
     emitToClients<T extends ServerToClientEventsNames>(

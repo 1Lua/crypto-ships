@@ -133,4 +133,8 @@ export type ServerToClientEvents = ServerToClientErrors & {
         winner?: string
         message: 'Game was finished'
     }) => void
+
+    gameDisconnect: (args: {
+        message: 'You have been disconected from game'
+    }) => void
 }

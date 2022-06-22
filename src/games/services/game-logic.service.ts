@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, OnModuleInit } from '@nestjs/common'
 
 import { JwtAuthService } from 'src/auth/jwt.auth.service'
 
@@ -14,8 +14,11 @@ import {
 } from './game-process'
 import { GameService } from './games.service'
 
+const MAX_AFK_TIME = 180000 // msec
+const ANTI_AFK_INTERVAL = 60000 // msec
+
 @Injectable()
-export class GameLogicService {
+export class GameLogicService implements OnModuleInit {
     private readonly _activeGames = new Map<GameId, GameProcess>()
 
     constructor(
@@ -33,6 +36,20 @@ export class GameLogicService {
 
     deleteGameFromActive(gameId: string): void {
         this._activeGames.delete(gameId)
+    }
+
+    onModuleInit(): void {
+        setInterval(() => {
+            // anti afk interval
+            this._activeGames.forEach((gameProcess) => {
+                if (Date.now() - gameProcess.lastAction > MAX_AFK_TIME) {
+                    gameProcess.emitToClients('gameDisconnect', {
+                        message: 'You have been disconected from game',
+                    })
+                    this.deleteGameFromActive(gameProcess.gameId)
+                }
+            })
+        }, ANTI_AFK_INTERVAL)
     }
 
     /**
@@ -187,6 +204,7 @@ export class GameLogicService {
                 'User dont connected to this game',
             )
         }
+        gameProcess.lastAction = Date.now()
         return { userId, isAuth, gameProcess }
     }
 
