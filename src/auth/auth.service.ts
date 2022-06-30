@@ -64,6 +64,8 @@ export class AuthService {
             token: token.token,
             refreshToken: refreshToken.token,
             expiresAt: Date.now() + token.expiresIn * MSINSEC,
+            userId: user.id,
+            userName: user.name,
         }
         return authData
     }

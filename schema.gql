@@ -24,6 +24,8 @@ type AuthType {
   token: String!
   expiresAt: Float!
   refreshToken: String!
+  userId: String!
+  userName: String!
 }
 
 type GameType {

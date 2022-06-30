@@ -10,4 +10,10 @@ export class AuthType {
 
     @Field(() => String)
     refreshToken: string
+
+    @Field(() => String)
+    userId: string
+
+    @Field(() => String)
+    userName: string
 }
