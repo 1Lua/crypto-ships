@@ -14,7 +14,7 @@ import {
 } from './game-process'
 import { GameService } from './games.service'
 
-const MAX_AFK_TIME = 180000 // msec
+const MAX_AFK_TIME = 1800000 // msec
 const ANTI_AFK_INTERVAL = 60000 // msec
 
 @Injectable()
@@ -68,6 +68,12 @@ export class GameLogicService implements OnModuleInit {
         const gameDto = await this._gameService.getGame(gameId)
         if (gameDto) {
             gameProcess = new GameProcess(gameDto)
+            if (gameProcess.status === 0) {
+                gameProcess.setStatus(GameStatuses.waitingForReady)
+                await this._gameService.updateGame(gameId, {
+                    status: GameStatuses.waitingForReady,
+                })
+            }
             return gameProcess
         }
         return undefined
@@ -266,6 +272,16 @@ export class GameLogicService implements OnModuleInit {
             throw new GamesGatewayError('userHashError', 'Unexpected hash')
         }
 
+        const localIds = gameProcess.getLocalUserId(userId)
+        if (localIds) {
+            if (gameProcess.users[localIds.userGameId].hash) {
+                throw new GamesGatewayError(
+                    'userHashError',
+                    'You already have sended the hash',
+                )
+            }
+        }
+
         try {
             await this._gameService.setGameUserHash(gameId, userId, hash)
         } catch (err) {
@@ -273,10 +289,15 @@ export class GameLogicService implements OnModuleInit {
         }
 
         gameProcess.setUserHash(userId, hash)
+        gameProcess.emitToClients('userSetHash', {
+            userId,
+            hash,
+        })
         if (gameProcess.isUsersHaveHash()) {
             await this._gameService.updateGame(gameId, {
                 status: GameStatuses.fighting,
             })
+            gameProcess.setStatus(GameStatuses.fighting)
             gameProcess.emitToClients('gameStarted', {
                 message: 'Game was started',
             })

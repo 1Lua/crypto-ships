@@ -32,6 +32,7 @@ export interface ServerToClientErrors {
         message:
             | 'Hash was expected'
             | 'Incorrect hash'
+            | 'You already have sended the hash'
             | 'Unexpected hash'
             | 'gameId was expected'
             | 'Hashes are not equals'
@@ -108,6 +109,8 @@ export type ServerToClientEvents = ServerToClientErrors & {
             | 'Server is waiting hash from you'
             | 'Server is waiting hash from enemy'
     }) => void
+
+    userSetHash: (args: { userId: string; hash: string }) => void
 
     gameStarted: (args: { message: 'Game was started' }) => void
 
