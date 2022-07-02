@@ -39,6 +39,10 @@ export class UsersService {
         return await bcrypt.compare(password, hashedPassword)
     }
 
+    async getUser(id: string): Promise<UserEntity | undefined> {
+        return await this._userRepository.findOne(id)
+    }
+
     async getUserByName(name: string): Promise<UserEntity | undefined> {
         return await this._userRepository.findOne({ name })
     }
@@ -82,6 +86,17 @@ export class UsersService {
         await this._statisticsRepository.save(statistics)
 
         user.statistics = statistics
+        return user
+    }
+
+    async getUserByIdWithStatistics(id: string): Promise<UserEntity> {
+        const user = await this._userRepository.findOne(
+            { id },
+            { relations: ['statistics'] },
+        )
+        if (!user) {
+            throw new Error()
+        }
         return user
     }
 
