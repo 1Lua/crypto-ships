@@ -4,6 +4,7 @@ import * as bcrypt from 'bcryptjs'
 import { Repository } from 'typeorm'
 
 import { CreateUserDto } from './dto/create-user.dto'
+import { UserDto, UserWithStatisticsDto } from './dto/user.dto'
 import { StatisticsEntity } from './entities/statistics.entity'
 import { UserEntity } from './entities/user.entity'
 
@@ -39,19 +40,21 @@ export class UsersService {
         return await bcrypt.compare(password, hashedPassword)
     }
 
-    async getUser(id: string): Promise<UserEntity | undefined> {
+    async getUser(id: string): Promise<UserDto | undefined> {
         return await this._userRepository.findOne(id)
     }
 
-    async getUserByName(name: string): Promise<UserEntity | undefined> {
+    async getUserByName(name: string): Promise<UserDto | undefined> {
         return await this._userRepository.findOne({ name })
     }
 
-    async getUserByLogin(login: string): Promise<UserEntity | undefined> {
+    async getUserByLogin(login: string): Promise<UserDto | undefined> {
         return await this._userRepository.findOne({ login })
     }
 
-    async createUser(createUserDto: CreateUserDto): Promise<UserEntity> {
+    async createUser(
+        createUserDto: CreateUserDto,
+    ): Promise<UserWithStatisticsDto> {
         if (!createUserDto.login.length) {
             throw new Error('Empty login')
         }
@@ -89,7 +92,9 @@ export class UsersService {
         return user
     }
 
-    async getUserByIdWithStatistics(id: string): Promise<UserEntity> {
+    async getUserByIdWithStatistics(
+        id: string,
+    ): Promise<UserWithStatisticsDto> {
         const user = await this._userRepository.findOne(
             { id },
             { relations: ['statistics'] },
@@ -100,7 +105,9 @@ export class UsersService {
         return user
     }
 
-    async getUserByNameWithStatistics(name: string): Promise<UserEntity> {
+    async getUserByNameWithStatistics(
+        name: string,
+    ): Promise<UserWithStatisticsDto> {
         const user = await this._userRepository.findOne(
             { name },
             { relations: ['statistics'] },

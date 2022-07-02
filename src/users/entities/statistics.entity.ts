@@ -31,10 +31,10 @@ export class StatisticsEntity {
     updateAt: number
 
     @Column({ type: String, nullable: true })
-    serverPublic: string | undefined
+    serverPublic?: string
 
     @Column({ type: String, nullable: true })
-    serverSign: string | undefined
+    serverSign?: string
 
     @OneToOne(() => UserEntity, (user) => user.statistics, {
         onDelete: 'CASCADE',

@@ -21,8 +21,8 @@ export class StatisticsType {
     updateAt: number
 
     @Field(() => Number, { nullable: true })
-    serverPublic: string | undefined
+    serverPublic?: string
 
     @Field(() => Number, { nullable: true })
-    serverSign: string | undefined
+    serverSign?: string
 }

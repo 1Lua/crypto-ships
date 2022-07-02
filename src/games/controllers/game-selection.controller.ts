@@ -2,6 +2,7 @@ import { Controller, Delete, Post, Req, Res } from '@nestjs/common'
 import { Request, Response } from 'express'
 
 import { JwtAuthService } from 'src/auth/jwt.auth.service'
+import { UsersService } from 'src/users/users.service'
 
 import { GameSelectionService } from '../services/game-selection.service'
 
@@ -10,6 +11,7 @@ export class GameSelectionController {
     constructor(
         private readonly _gameSelectionService: GameSelectionService,
         private readonly _jwtAuthService: JwtAuthService,
+        private readonly _usersService: UsersService,
     ) {}
 
     @Post()
@@ -25,11 +27,15 @@ export class GameSelectionController {
             throw new Error('Token is not consist user id')
         }
         const userId = verifyData.sub
-        this._gameSelectionService.removeUserFromQuery({ id: userId }) // избежание дублирования
-        this._gameSelectionService.removeSubsciber({ id: userId })
 
-        this._gameSelectionService.addSubscriber({ id: userId }, res)
-        this._gameSelectionService.addUserToQuery({ id: userId })
+        const user = await this._usersService.getUser(userId)
+        if (user) {
+            this._gameSelectionService.removeUserFromQuery(user) // избежание дублирования
+            this._gameSelectionService.removeSubsciber(user)
+
+            this._gameSelectionService.addSubscriber(user, res)
+            this._gameSelectionService.addUserToQuery(user)
+        }
     }
 
     @Delete()
@@ -46,9 +52,12 @@ export class GameSelectionController {
         }
         const userId = verifyData.sub
 
-        this._gameSelectionService.removeUserFromQuery({ id: userId })
-        this._gameSelectionService.removeSubsciber({ id: userId })
-
-        return 'ok'
+        const user = await this._usersService.getUser(userId)
+        if (user) {
+            this._gameSelectionService.removeUserFromQuery(user)
+            this._gameSelectionService.removeSubsciber(user)
+            return 'ok'
+        }
+        return ''
     }
 }

@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
 import { CreateUserDto } from 'src/users/dto/create-user.dto'
-import { UserEntity } from 'src/users/entities/user.entity'
+import { UserWithStatisticsDto } from 'src/users/dto/user.dto'
 import { UsersService } from 'src/users/users.service'
 
 import { AuthDataDto } from './dtos/auth-data.dto'
@@ -25,8 +25,10 @@ export class AuthService {
         private readonly _refreshTokenRepository: Repository<RefreshTokenEntity>,
     ) {}
 
-    async signUp(createUserDro: CreateUserDto): Promise<UserEntity> {
-        const user = await this._usersService.createUser(createUserDro)
+    async signUp(createUserDro: CreateUserDto): Promise<UserWithStatisticsDto> {
+        const user: UserWithStatisticsDto = await this._usersService.createUser(
+            createUserDro,
+        )
         return user
     }
 
